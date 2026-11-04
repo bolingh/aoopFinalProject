@@ -1,68 +1,24 @@
-# Prerequisites
-*.d
+# 1. 虛擬環境 (Virtual Environments)
+venv/
+.venv/
+env/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+# 2. C++ 編譯產物與暫存檔 (Build Artifacts)
 *.so
-*.dylib
-*.dll
-*.so.*
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+*.o
 *.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Build directories
+*.pyd
+*.dll
+*.dylib
 build/
-Build/
-build-*/
+bin/
 
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-install_manifest.txt
-compile_commands.json
+# 3. Python 執行快取 (Python Cache)
+__pycache__/
+*.py[cod]
+*$py.class
 
-# Temporary files
-*.tmp
-*.log
-*.bak
+# 4. 編輯器暫存檔 (可選)
+.vscode/
+.idea/
 *.swp
-
-# vcpkg
-vcpkg_installed/
-
-# debug information files
-*.dwo
-
-# test output & cache
-Testing/
-.cache/
