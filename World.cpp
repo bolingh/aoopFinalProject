@@ -1,7 +1,4 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <bits/stdc++.h>
-#include "dataStrucs.h"
+#include "headers.h"
 using namespace std;
 using vecc = Vector2;
 
@@ -10,27 +7,43 @@ struct RenderEntity {
     int type;
 };
 
-struct Organism {
+struct Genome {
+    double max_speed, fov, size, mutation_rate;
+};
+
+class Organism {
+public:
+    virtual ~Organism() = default;
     vecc pos, velo;
-    double size, ener;
+    double ener;
     int type;
+    Genome gen;
+};
+
+const int plant_type = 0;
+struct Plant {
+    vecc pos;
+    double size, ener;
+    bool is_eaten;
 };
 
 class World {
 private:
     int width, height;
-    vector<Organism*> orgs;
+    vector<unique_ptr<Organism>> orgs;
+    vector<Plant> plants;
 public:
-    World() : width(1), height(1) {}
-    World(int _width, int _height) : width(_width), height(_height) {}
+    World(int _width = 1, int _height = 1) : width(_width), height(_height) {}
     void step() {
 
     }
     vector<RenderEntity> get_render_entities() {
-        vector<RenderEntity> ans;
+        vector<RenderEntity> entities;
         for(auto &org : orgs)
-            ans.push_back({org->pos.x, org->pos.y, org->size, org->type});
-        return ans;
+            entities.push_back({org->pos.x, org->pos.y, org->gen.size, org->type});
+        for(auto &plant : plants)
+            entities.push_back({plant.pos.x, plant.pos.y, plant.size, plant_type});
+        return entities;
     }
 };
 
