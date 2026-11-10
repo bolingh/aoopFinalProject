@@ -12,6 +12,7 @@ env/
 *.dylib
 build/
 bin/
+World
 
 # 3. Python 執行快取 (Python Cache)
 __pycache__/
@@ -22,3 +23,6 @@ __pycache__/
 .vscode/
 .idea/
 *.swp
+
+# 5. AI一開始給的範例
+initialExample*

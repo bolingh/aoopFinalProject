@@ -1,10 +1,11 @@
 import pygame
-import ecosim
+import initialExample as ecosim
+#import World as ecosim
 
 pygame.init()
 WIDTH, HEIGHT = 1000, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Ecosystem MVP - C++ & Pygame")
+pygame.display.set_caption("Ecosystem")
 clock = pygame.time.Clock()
 
 sim = ecosim.SimulationWorld()

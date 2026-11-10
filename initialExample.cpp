@@ -61,7 +61,7 @@ public:
 };
 
 // pybind11 綁定
-PYBIND11_MODULE(ecosim, m) {
+PYBIND11_MODULE(initialExample, m) {
     pybind11::class_<RenderEntity>(m, "RenderEntity")
         .def_readonly("x", &RenderEntity::x)
         .def_readonly("y", &RenderEntity::y)
