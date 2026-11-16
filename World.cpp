@@ -9,12 +9,20 @@ public:
     World(int _width = 1000, int _height = 800, int _org_num = 10) : width(_width), height(_height), org_num(_org_num) {
         orgs.reserve(org_num);
         for(int i = 0; i < org_num; ++i) {
-            vecc pos(get_rand((double)width))
-            orgs.push_back({})
+            vecc pos(get_rand((double)width), get_rand((double)height));
+            double vx = get_rand(-1, 1), vy = get_rand(-1, 1);
+            vecc velo(vecc(vx, vy).normalized());
+            double ener = 50;
+            int type = (int)get_rand(3) + 1;
+            Genome gen = {1, 1, 1, 0.5};
+            auto brain = make_unique<RuleBasedBrain>();
+            orgs.push_back({pos, velo, ener, type, gen, brain});
         }
     }
     void step() {
-        // for all org:orgs, org->tick()
+        // for all org:orgs, org->tick() (moves)
+        // check eating
+        // clean deads, reproduce, spawn plants
     }
     vector<RenderEntity> get_render_entities() {
         vector<RenderEntity> entities;

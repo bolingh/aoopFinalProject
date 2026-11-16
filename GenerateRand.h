@@ -9,3 +9,9 @@ double get_rand(double left, double right) {
 double get_rand(double right = 1.0) {
     return get_rand(0.0, right);
 }
+
+int get_rand_int(int left, int right) {
+    static mt19937mt(random_device{}());
+    uniform_int_distribution dis(left, right);
+    return dis(mt);
+}
