@@ -2,13 +2,13 @@
 
 using OrganismConstruc = unique_ptr<Organism>(*)(vecc, vecc, double, Genome, unique_ptr<IBrain>);
 static unordered_map<int, OrganismConstruc> organism_constructors = {
-    {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+    {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
         return make_unique<Sheep>(p, v, e, g, move(b));
     }},
-    {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+    {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
         return make_unique<Wolf>(p, v, e, g, move(b));
     }},
-    {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+    {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
         return make_unique<Bear>(p, v, e, g, move(b));
     }}
 };

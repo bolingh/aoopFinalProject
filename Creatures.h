@@ -28,6 +28,8 @@ struct WorldContext {
 
 class Organism {
 public:
+    Organism(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b)
+        : pos(p), velo(v), ener(e), gen(g), brain(move(b)) {}
     virtual ~Organism() = default;
     vecc pos, velo;
     double ener;
@@ -51,12 +53,27 @@ public:
 
 class Sheep : public Organism {
 public:
+    using Organism::Organism;
+    void decay_energy() override {}
+    Perception sense(const WorldContext&) override { return {}; }
+    void act(Action) override {}
+    unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
 class Wolf : public Organism {
 public:
+    using Organism::Organism;
+    void decay_energy() override {}
+    Perception sense(const WorldContext&) override { return {}; }
+    void act(Action) override {}
+    unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
 class Bear : public Organism {
 public:
+    using Organism::Organism;
+    void decay_energy() override {}
+    Perception sense(const WorldContext&) override { return {}; }
+    void act(Action) override {}
+    unique_ptr<Organism> reproduce() override { return nullptr; }
 };
