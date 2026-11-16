@@ -11,7 +11,7 @@ double get_rand(double right = 1.0) {
 }
 
 int get_rand_int(int left, int right) {
-    static mt19937mt(random_device{}());
+    static mt19937 mt(random_device{}());
     uniform_int_distribution dis(left, right);
     return dis(mt);
 }

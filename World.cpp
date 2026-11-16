@@ -1,7 +1,7 @@
 #include "headers.h"
 
-using OrganismConstruc = function<unique_ptr<Organism>(vecc, vecc, double, Genome, unique_ptr<IBrain>)>;
-static const unordered_map<int, OrganismConstruc> organism_constructors = {
+using OrganismConstruc = unique_ptr<Organism>(*)(vecc, vecc, double, Genome, unique_ptr<IBrain>);
+static unordered_map<int, OrganismConstruc> organism_constructors = {
     {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
         return make_unique<Sheep>(p, v, e, g, move(b));
     }},
@@ -37,6 +37,8 @@ public:
         // check eating
         // clean deads, reproduce, spawn plants
     }
+    int get_width() {return width;}
+    int get_height() {return height;}
     vector<RenderEntity> get_render_entities() {
         vector<RenderEntity> entities;
         for(auto &org : orgs)
@@ -68,7 +70,7 @@ PYBIND11_MODULE(World, m) {
     pybind11::class_<World>(m, "World")
         .def(pybind11::init<>())
         .def("step", &World::step)
-        .def_readonly("width", &World::width)
-        .def_readonly("height", &World::height)
+        .def("get_width", &World::get_width)
+        .def("get_height", &World::get_height)
         .def("get_render_entities", &World::get_render_entities);
 }

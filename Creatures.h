@@ -48,9 +48,15 @@ public:
         act(action);
     }
 };
-/*
+
 class Sheep : public Organism {
 public:
-    Sheep() {}
 };
-*/
+
+class Wolf : public Organism {
+public:
+};
+
+class Bear : public Organism {
+public:
+};
