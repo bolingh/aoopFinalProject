@@ -1,15 +1,15 @@
 #include "headers.h"
 
-using OrganismConstruc = unique_ptr<Organism>(*)(vecc, vecc, double, Genome, unique_ptr<IBrain>);
+using OrganismConstruc = unique_ptr<Organism>(*)(vecc, vecc, double, int, Genome, unique_ptr<IBrain>);
 static unordered_map<int, OrganismConstruc> organism_constructors = {
-    {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Sheep>(p, v, e, g, move(b));
+    {1, [](vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+        return make_unique<Sheep>(p, v, e, t, g, move(b));
     }},
-    {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Wolf>(p, v, e, g, move(b));
+    {2, [](vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+        return make_unique<Wolf>(p, v, e, t, g, move(b));
     }},
-    {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Bear>(p, v, e, g, move(b));
+    {3, [](vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+        return make_unique<Bear>(p, v, e, t, g, move(b));
     }}
 };
 
@@ -26,11 +26,12 @@ public:
             double vx = get_rand(-1, 1), vy = get_rand(-1, 1);
             vecc v(vecc(vx, vy).normalized());
             double e = 50;
-            int type = get_rand_int(1, 3);
+            int t = get_rand_int(1, 3);
             Genome g = {1, 1, 1, 0.5};
             auto b = make_unique<RuleBasedBrain>();
-            orgs.push_back(organism_constructors.at(type)(p, v, e, g, move(b)));
+            orgs.push_back(organism_constructors[t](p, v, e, t, g, move(b)));
         }
+        // not spawn plants yet
     }
     void step() {
         // for all org:orgs, org->tick() (moves)

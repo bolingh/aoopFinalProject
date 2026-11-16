@@ -28,8 +28,8 @@ struct WorldContext {
 
 class Organism {
 public:
-    Organism(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b)
-        : pos(p), velo(v), ener(e), gen(g), brain(move(b)) {}
+    Organism(vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b)
+        : pos(p), velo(v), ener(e), type(t), gen(g), brain(move(b)) {}
     virtual ~Organism() = default;
     vecc pos, velo;
     double ener;
