@@ -1,12 +1,26 @@
 #pragma once
 struct Vector2 {
     double x, y;
+    Vector2(double _x = 1, double _y = 0) : x(_x), y(_y) {}
+    double len() {
+        return sqrt(x * x + y * y);
+    }
     Vector2 normalized() {
-        double len = sqrt(x * x + y * y);
-        if(abs(len) <= 1e-8) return {0, 0};
-        return {x / len, y / len};
+        double l = len();
+        if(abs(l) <= 1e-8) return {0, 0};
+        return {x / l, y / l};
+    }
+    Vector2 operator+(Vector2 &other) {
+        return Vector2(x + other.x, y + other.y);
+    }
+    Vector2 operator-(Vector2 &other) {
+        return Vector2(x - other.x, y - other.y);
     }
 };
+
+Vector2 operator*(double multi, Vector2 v) {
+    return Vector2(multi * v.x, multi * v.y);
+}
 
 struct Perception {
     bool has_food, has_predator;
@@ -15,4 +29,9 @@ struct Perception {
 
 struct Action {
     Vector2 forward;
+};
+
+struct RenderEntity {
+    double x, y, size;
+    int type;
 };

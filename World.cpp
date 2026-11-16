@@ -2,26 +2,20 @@
 using namespace std;
 using vecc = Vector2;
 
-struct RenderEntity {
-    double x, y, size;
-    int type;
+struct WorldContext {
+    vector<unique_ptr<Organism>> orgs;
+    vector<Plant> plants;
+    double world_width, world_height;
 };
 
-struct Genome {
-    double max_speed, fov, size, mutation_rate;
-};
-
-class Organism {
+class Sheep : public Organism {
 public:
-    virtual ~Organism() = default;
-    vecc pos, velo;
-    double ener;
-    int type;
-    Genome gen;
+    Sheep() {}
 };
 
 const int plant_type = 0;
-struct Plant {
+class Plant {
+public:
     vecc pos;
     double size, ener;
     bool is_eaten;
@@ -35,7 +29,6 @@ private:
 public:
     World(int _width = 1, int _height = 1) : width(_width), height(_height) {}
     void step() {
-
     }
     vector<RenderEntity> get_render_entities() {
         vector<RenderEntity> entities;
@@ -45,6 +38,7 @@ public:
             entities.push_back({plant.pos.x, plant.pos.y, plant.size, plant_type});
         return entities;
     }
+    WorldContext to_ctx() {return {orgs, plants, width, height};}
 };
 
 /*

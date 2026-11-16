@@ -5,7 +5,7 @@
 class IBrain {
 public:
     virtual ~IBrain() = default;
-    virtual Action decide(const Perception& input) = 0;
+    virtual Action decide(const Perception& p) = 0;
 };
 /*
 class RuleBasedBrain : public IBrain {
