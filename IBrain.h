@@ -7,7 +7,7 @@ public:
     virtual ~IBrain() = default;
     virtual Action decide(const Perception& p) = 0;
 };
-/*
+
 class RuleBasedBrain : public IBrain {
 public:
     Action decide(const Perception& input) override {
@@ -36,4 +36,3 @@ public:
         return Action{ random_dir.normalized() };
     }
 };
-*/

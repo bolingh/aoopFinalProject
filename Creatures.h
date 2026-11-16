@@ -1,7 +1,17 @@
 #pragma once
+const int plant_type = 0;
+class Plant {
+public:
+    vecc pos;
+    double size, ener;
+    bool is_eaten;
+};
+
 struct Genome {
     double max_speed, fov, size, mutation_rate;
 };
+
+struct WorldContext;
 
 class Organism {
 public:
@@ -13,15 +23,21 @@ public:
     unique_ptr<IBrain> brain;
     
     virtual void decay_energy() = 0;
-    virtual Perception sense(WorldContext ctx) = 0;
+    virtual Perception sense(const WorldContext &ctx) = 0;
     virtual void act(Action action) = 0;
     virtual bool can_reproduce() const {return ener > 150;};
-    unique_ptr<Organism> reproduce() = 0;
-    void tick(WorldContext ctx) {
+    virtual unique_ptr<Organism> reproduce() = 0;
+    void tick(const WorldContext &ctx) {
         // decay_energy() -> sense() -> decide() -> act() -> reproduce()
         decay_energy();
         Perception p = sense(ctx);
         Action action = brain->decide(p);
         act(action);
     }
+};
+
+struct WorldContext {
+    const vector<unique_ptr<Organism>> &orgs;
+    const vector<Plant> &plants;
+    int world_width, world_height;
 };

@@ -1,24 +1,9 @@
 #include "headers.h"
 using namespace std;
-using vecc = Vector2;
-
-struct WorldContext {
-    vector<unique_ptr<Organism>> orgs;
-    vector<Plant> plants;
-    double world_width, world_height;
-};
 
 class Sheep : public Organism {
 public:
     Sheep() {}
-};
-
-const int plant_type = 0;
-class Plant {
-public:
-    vecc pos;
-    double size, ener;
-    bool is_eaten;
 };
 
 class World {

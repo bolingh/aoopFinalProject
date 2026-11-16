@@ -22,6 +22,10 @@ Vector2 operator*(double multi, Vector2 v) {
     return Vector2(multi * v.x, multi * v.y);
 }
 
+Vector2 operator*(Vector2 v, double multi) {
+    return Vector2(multi * v.x, multi * v.y);
+}
+
 struct Perception {
     bool has_food, has_predator;
     Vector2 food_dir, predator_dir;
