@@ -10,14 +10,14 @@ public:
 
 class RuleBasedBrain : public IBrain {
 public:
-    Action decide(const Perception& input) override {
+    Action decide(const Perception& p) override {
         Action act;
-        if(input.has_predator) { // has predator
-            act.forward = input.predator_dir * (-1.0);
+        if(p.has_predator) { // has predator
+            act.forward = p.predator_dir * (-1.0);
             return act;
         }
-        else if(input.has_food) { // has food
-            act.forward = input.food_dir;
+        else if(p.has_food) { // has food
+            act.forward = p.food_dir;
             return act;
         }
         // move freely
@@ -28,7 +28,7 @@ public:
 
 class RandomBrain : public IBrain {
 public:
-    Action decide(const Perception& input) override {
+    Action decide(const Perception& p) override {
         double rx = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
         double ry = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
         

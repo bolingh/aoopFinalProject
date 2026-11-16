@@ -9,7 +9,7 @@ public:
 
 struct Genome {
     double max_speed, fov, size, mutation_rate;
-    Genome mutate() {}
+    //Genome mutate() {}
 };
 
 class Organism;
