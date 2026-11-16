@@ -48,8 +48,9 @@ public:
         act(action);
     }
 };
-
+/*
 class Sheep : public Organism {
 public:
     Sheep() {}
 };
+*/

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <functional>
+#include <unordered_map>
 using namespace std;
 #include "DataStrucs.h"
 using vecc = Vector2;

@@ -1,5 +1,18 @@
 #include "headers.h"
 
+using OrganismConstruc = function<unique_ptr<Organism>(vecc, vecc, double, Genome, unique_ptr<IBrain>)>;
+static const unordered_map<int, OrganismConstruc> organism_constructors = {
+    {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+        return make_unique<Sheep>(p, v, e, g, move(b));
+    }},
+    {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+        return make_unique<Wolf>(p, v, e, g, move(b));
+    }},
+    {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+        return make_unique<Bear>(p, v, e, g, move(b));
+    }}
+};
+
 class World {
 private:
     int width, height, org_num;
@@ -9,14 +22,14 @@ public:
     World(int _width = 1000, int _height = 800, int _org_num = 10) : width(_width), height(_height), org_num(_org_num) {
         orgs.reserve(org_num);
         for(int i = 0; i < org_num; ++i) {
-            vecc pos(get_rand((double)width), get_rand((double)height));
+            vecc p(get_rand((double)width), get_rand((double)height));
             double vx = get_rand(-1, 1), vy = get_rand(-1, 1);
-            vecc velo(vecc(vx, vy).normalized());
-            double ener = 50;
-            int type = (int)get_rand(3) + 1;
-            Genome gen = {1, 1, 1, 0.5};
-            auto brain = make_unique<RuleBasedBrain>();
-            orgs.push_back({pos, velo, ener, type, gen, brain});
+            vecc v(vecc(vx, vy).normalized());
+            double e = 50;
+            int type = get_rand_int(1, 3);
+            Genome g = {1, 1, 1, 0.5};
+            auto b = make_unique<RuleBasedBrain>();
+            orgs.push_back(organism_constructors.at(type)(p, v, e, g, move(b)));
         }
     }
     void step() {
