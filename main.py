@@ -3,7 +3,7 @@ import initialExample as ecosim
 #import World as ecosim
 
 pygame.init()
-WIDTH, HEIGHT = 1000, 800
+WIDTH, HEIGHT = ecosim.width, ecosim.height
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Ecosystem")
 clock = pygame.time.Clock()

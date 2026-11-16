@@ -2,12 +2,19 @@
 
 class World {
 private:
-    int width, height;
+    int width, height, org_num;
     vector<unique_ptr<Organism>> orgs;
     vector<Plant> plants;
 public:
-    World(int _width = 1, int _height = 1) : width(_width), height(_height) {}
+    World(int _width = 1000, int _height = 800, int _org_num = 10) : width(_width), height(_height), org_num(_org_num) {
+        orgs.reserve(org_num);
+        for(int i = 0; i < org_num; ++i) {
+            vecc pos(get_rand((double)width))
+            orgs.push_back({})
+        }
+    }
     void step() {
+        // for all org:orgs, org->tick()
     }
     vector<RenderEntity> get_render_entities() {
         vector<RenderEntity> entities;
@@ -40,5 +47,7 @@ PYBIND11_MODULE(World, m) {
     pybind11::class_<World>(m, "World")
         .def(pybind11::init<>())
         .def("step", &World::step)
+        .def_readonly("width", &World::width)
+        .def_readonly("height", &World::height)
         .def("get_render_entities", &World::get_render_entities);
 }

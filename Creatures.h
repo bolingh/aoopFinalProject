@@ -10,7 +10,11 @@ public:
 struct Genome {
     double max_speed, fov, size, mutation_rate;
     Genome mutate() {
-        double r = get_rand(mutation_rate);
+        double r = get_rand(-mutation_rate, mutation_rate);
+        return {max_speed + r, 
+                fov + r,
+                size + r,
+                mutation_rate + r};
     }
 };
 
