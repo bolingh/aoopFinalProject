@@ -9,9 +9,16 @@ public:
 
 struct Genome {
     double max_speed, fov, size, mutation_rate;
+    Genome mutate() {}
 };
 
-struct WorldContext;
+class Organism;
+
+struct WorldContext {
+    const vector<unique_ptr<Organism>> &orgs;
+    const vector<Plant> &plants;
+    int world_width, world_height;
+};
 
 class Organism {
 public:
@@ -36,8 +43,7 @@ public:
     }
 };
 
-struct WorldContext {
-    const vector<unique_ptr<Organism>> &orgs;
-    const vector<Plant> &plants;
-    int world_width, world_height;
+class Sheep : public Organism {
+public:
+    Sheep() {}
 };

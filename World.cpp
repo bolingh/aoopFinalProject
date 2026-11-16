@@ -1,10 +1,4 @@
 #include "headers.h"
-using namespace std;
-
-class Sheep : public Organism {
-public:
-    Sheep() {}
-};
 
 class World {
 private:
