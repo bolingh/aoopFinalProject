@@ -20,14 +20,14 @@ public:
     WorldContext to_ctx() {return {orgs, plants, width, height};}
 };
 
-
+/*
 int main() {
     for(int i = 1; i <= 10; ++i) {
         for(int j = 0; j < 3; ++j) cout << get_rand(0, i) << ' ';
         cout << '\n';
     }
 }
-
+*/
 
 // pybind11
 PYBIND11_MODULE(World, m) {

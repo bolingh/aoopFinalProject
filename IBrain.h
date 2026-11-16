@@ -29,9 +29,7 @@ public:
 class RandomBrain : public IBrain {
 public:
     Action decide(const Perception& p) override {
-        double rx = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
-        double ry = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
-        
+        double rx = get_rand(), ry = get_rand();
         Vector2 random_dir{rx, ry};
         return Action{ random_dir.normalized() };
     }
