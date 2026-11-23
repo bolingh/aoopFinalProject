@@ -1,3 +1,5 @@
+const int init_world_width = 1000;
+const int init_world_height = 800;
 const vector<int> init_num = {180, 50, 10, 3};
 const vector<double> init_ener = {25.0, 100.0, 120.0, 200.0};
 const vector<double> init_sz = {4, 8, 14, 24};

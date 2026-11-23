@@ -41,7 +41,34 @@ public:
         ener = max(0.0, ener - cost);
     }
     virtual Perception sense(const WorldContext &ctx) = 0;
-    virtual void act(Action action) = 0;
+    void act(Action action) {
+        vecc desired_dir = action.forward.normalized();
+        if(desired_dir.x != 0 || desired_dir.y != 0) {
+            vecc desired_velo = desired_dir * gen.max_speed;
+            velo = velo * 0.8 + desired_velo * 0.2;
+            if(velo.length() > gen.max_speed) {
+                velo = velo.normalized() * gen.max_speed;
+            }
+        }
+        pos = pos + velo;
+        double r = gen.size;
+        if(pos.x - r < 0) { // left
+            pos.x = r;
+            velo.x = -velo.x;
+        }
+        else if(pos.x + r > init_world_width) { // right
+            pos.x = init_world_width - r;
+            velo.x = -velo.x;
+        }
+        if(pos.y - r < 0) { // ceil
+            pos.y = r;
+            velo.y = -velo.y;
+        }
+        else if(pos.y + r > init_world_height) { // floor
+            pos.y = init_world_height - r;
+            velo.y = -velo.y;
+        }
+    }
     virtual bool can_reproduce() const {return ener > 150;};
     virtual unique_ptr<Organism> reproduce() = 0;
     void tick(const WorldContext &ctx) {
@@ -85,7 +112,6 @@ public:
         }
         return p;
     }
-    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
@@ -94,7 +120,6 @@ public:
     Wolf(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 2, g, move(b)) {}
     Perception sense(const WorldContext&) override { return {}; }
-    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
@@ -103,6 +128,5 @@ public:
     Bear(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 3, g, move(b)) {}
     Perception sense(const WorldContext&) override { return {}; }
-    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };

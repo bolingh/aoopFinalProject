@@ -25,7 +25,7 @@ private:
     }
     WorldContext to_ctx() {return {orgs, plants, width, height};}
 public:
-    World(int _width = 1000, int _height = 800) : width(_width), height(_height) {
+    World(int _width = init_world_width, int _height = init_world_height) : width(_width), height(_height) {
         plants.resize(init_num[plant_type]);
         for(auto &plant : plants) {
             plant.pos = rand_pos();
