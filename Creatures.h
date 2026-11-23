@@ -42,13 +42,11 @@ public:
     }
     virtual Perception sense(const WorldContext &ctx) = 0;
     void act(Action action) {
-        vecc desired_dir = action.forward.normalized();
-        if(desired_dir.x != 0 || desired_dir.y != 0) {
-            vecc desired_velo = desired_dir * gen.max_speed;
-            velo = velo * 0.8 + desired_velo * 0.2;
-            if(velo.length() > gen.max_speed) {
-                velo = velo.normalized() * gen.max_speed;
-            }
+        vecc des_dir = action.forward.normalized();
+        if(des_dir.x != 0 || des_dir.y != 0) {
+            vecc des_velo = des_dir * gen.max_speed;
+            velo = velo * 0.8 + des_velo * 0.2;
+            if(velo.len() > gen.max_speed) velo = velo.normalized() * gen.max_speed;
         }
         pos = pos + velo;
         double r = gen.size;
@@ -71,7 +69,7 @@ public:
     }
     virtual bool can_reproduce() const {return ener > 150;};
     virtual unique_ptr<Organism> reproduce() = 0;
-    void tick(const WorldContext &ctx) {
+    void tick(const WorldContext& ctx) {
         // decay_energy() -> sense() -> decide() -> act() -> reproduce()
         decay_energy();
         Perception p = sense(ctx);
@@ -84,12 +82,12 @@ class Sheep : public Organism {
 public:
     Sheep(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 1, g, move(b)) {}
-    Perception sense(const WorldContext& ctx) {
+    Perception sense(const WorldContext &ctx) {
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = p.predator_dir = {0, 0};
         double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
-        for(auto& plant : ctx.plants) {
+        for(auto &plant : ctx.plants) {
             if(plant.is_eaten) continue;
             vecc diff = plant.pos - this->pos;
             double dist_sq = diff.len();
@@ -99,7 +97,7 @@ public:
                 p.food_dir = diff.normalized();
             }
         }
-        for(auto& other : ctx.orgs) {
+        for(auto &other : ctx.orgs) {
             if(other->type > this->type) {
                 vecc diff = other->pos - this->pos;
                 double dist_sq = diff.len();

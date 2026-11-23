@@ -10,10 +10,10 @@ struct Vector2 {
         if(abs(l) <= 1e-8) return {0, 0};
         return {x / l, y / l};
     }
-    Vector2 operator+(Vector2 &other) {
+    Vector2 operator+(const Vector2 other) const {
         return Vector2(x + other.x, y + other.y);
     }
-    Vector2 operator-(Vector2 &other) {
+    Vector2 operator-(const Vector2 other) const {
         return Vector2(x - other.x, y - other.y);
     }
 };
