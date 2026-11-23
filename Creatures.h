@@ -37,8 +37,8 @@ public:
     unique_ptr<IBrain> brain;
     
     void decay_energy() {
-        double cost = init_decay[type] * (0.5 + 0.5 * velo.len() / init_speed[type];
-        ener = max(0.0, ener - cost));
+        double cost = init_decay[type] * (0.5 + 0.5 * velo.len() / init_speed[type]);
+        ener = max(0.0, ener - cost);
     }
     virtual Perception sense(const WorldContext &ctx) = 0;
     virtual void act(Action action) = 0;
@@ -73,9 +73,9 @@ public:
             }
         }
         for(auto& other : ctx.orgs) {
-            if(other->type > type) {
+            if(other->type > this->type) {
                 vecc diff = other->pos - this->pos;
-                double dist_sq = diff.x * diff.x + diff.y * diff.y;
+                double dist_sq = diff.len();
                 if (dist_sq < min_predator_dist_sq) {
                     min_predator_dist_sq = dist_sq;
                     p.has_predator = true;
