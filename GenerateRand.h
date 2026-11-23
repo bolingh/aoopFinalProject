@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdlib>
 #include <random>
 double get_rand(double left, double right) {
