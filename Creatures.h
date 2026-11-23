@@ -52,8 +52,10 @@ public:
 
 class Sheep : public Organism {
 public:
-    using Organism::Organism;
-    void decay_energy() override {}
+    Sheep(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
+        : Organism(p, v, e, 1, g, move(b)) {}
+    void decay_energy() override {
+    }
     Perception sense(const WorldContext&) override { return {}; }
     void act(Action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
