@@ -36,7 +36,10 @@ public:
     Genome gen;
     unique_ptr<IBrain> brain;
     
-    virtual void decay_energy() = 0;
+    void decay_energy() {
+        double cost = init_decay[type] * (0.5 + 0.5 * velo.len() / init_speed[type];
+        ener = max(0.0, ener - cost));
+    }
     virtual Perception sense(const WorldContext &ctx) = 0;
     virtual void act(Action action) = 0;
     virtual bool can_reproduce() const {return ener > 150;};
@@ -54,27 +57,52 @@ class Sheep : public Organism {
 public:
     Sheep(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 1, g, move(b)) {}
-    void decay_energy() override {
+    Perception sense(const WorldContext& ctx) {
+        Perception p;
+        p.has_food = p.has_predator = false;
+        p.food_dir = p.predator_dir = {0, 0};
+        double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
+        for(auto& plant : ctx.plants) {
+            if(plant.is_eaten) continue;
+            vecc diff = plant.pos - this->pos;
+            double dist_sq = diff.len();
+            if(dist_sq < min_food_dist_sq) {
+                min_food_dist_sq = dist_sq;
+                p.has_food = true;
+                p.food_dir = diff.normalized();
+            }
+        }
+        for(auto& other : ctx.orgs) {
+            if(other->type > type) {
+                vecc diff = other->pos - this->pos;
+                double dist_sq = diff.x * diff.x + diff.y * diff.y;
+                if (dist_sq < min_predator_dist_sq) {
+                    min_predator_dist_sq = dist_sq;
+                    p.has_predator = true;
+                    p.predator_dir = diff.normalized();
+                }
+            }
+        }
+        return p;
     }
-    Perception sense(const WorldContext&) override { return {}; }
-    void act(Action) override {}
+    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
 class Wolf : public Organism {
 public:
-    using Organism::Organism;
-    void decay_energy() override {}
+    Wolf(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
+        : Organism(p, v, e, 2, g, move(b)) {}
     Perception sense(const WorldContext&) override { return {}; }
-    void act(Action) override {}
+    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
 class Bear : public Organism {
 public:
-    using Organism::Organism;
-    void decay_energy() override {}
+    Bear(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
+        : Organism(p, v, e, 3, g, move(b)) {}
     Perception sense(const WorldContext&) override { return {}; }
-    void act(Action) override {}
+    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
