@@ -2,14 +2,14 @@
 
 using OrganismConstruc = unique_ptr<Organism>(*)(vecc, vecc, double, int, Genome, unique_ptr<IBrain>);
 static unordered_map<int, OrganismConstruc> organism_constructors = {
-    {1, [](vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Sheep>(p, v, e, t, g, move(b));
+    {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+        return make_unique<Sheep>(p, v, e, 1, g, move(b));
     }},
-    {2, [](vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Wolf>(p, v, e, t, g, move(b));
+    {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+        return make_unique<Wolf>(p, v, e, 2, g, move(b));
     }},
-    {3, [](vecc p, vecc v, double e, int t, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Bear>(p, v, e, t, g, move(b));
+    {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+        return make_unique<Bear>(p, v, e, 3, g, move(b));
     }}
 };
 
@@ -18,18 +18,26 @@ private:
     int width, height, org_num;
     vector<unique_ptr<Organism>> orgs;
     vector<Plant> plants;
+    vecc rand_pos() {return {get_rand((double)width), get_rand((double)height)};}
 public:
     World(int _width = 1000, int _height = 800, int _org_num = 10) : width(_width), height(_height), org_num(_org_num) {
         orgs.reserve(org_num);
         for(int i = 0; i < org_num; ++i) {
-            vecc p(get_rand((double)width), get_rand((double)height));
+            vecc p(rand_pos());
             double vx = get_rand(-1, 1), vy = get_rand(-1, 1);
             vecc v(vecc(vx, vy).normalized());
             double e = 50;
             int t = get_rand_int(1, 3);
             Genome g = {1, 1, 1, 0.5};
             auto b = make_unique<RuleBasedBrain>();
-            orgs.push_back(organism_constructors[t](p, v, e, t, g, move(b)));
+            orgs.push_back(organism_constructors[t](p, v, e, g, move(b)));
+        }
+        plants.resize(org_num * 10);
+        for(auto &plant : plants) {
+            plant.pos = rand_pos();
+            plant.size = 4;
+            plant.ener = 25;
+            plant.is_eaten = false;
         }
         plants.resize(org_num * 10);
         for(auto &plant : plants) {
