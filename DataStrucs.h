@@ -2,12 +2,12 @@
 struct Vector2 {
     double x, y;
     Vector2(double _x = 1, double _y = 0) : x(_x), y(_y) {}
-    double len() {
+    double len() const {
         return sqrt(x * x + y * y);
     }
-    Vector2 normalized() {
+    Vector2 normalized() const {
         double l = len();
-        if(abs(l) <= 1e-8) return {0, 0};
+        if (abs(l) <= 1e-8) return {0, 0};
         return {x / l, y / l};
     }
     Vector2 operator+(const Vector2 other) const {
@@ -17,7 +17,6 @@ struct Vector2 {
         return Vector2(x - other.x, y - other.y);
     }
 };
-using vecc = Vector2;
 
 Vector2 operator*(double multi, Vector2 v) {
     return Vector2(multi * v.x, multi * v.y);
@@ -40,3 +39,5 @@ struct RenderEntity {
     double x, y, size;
     int type;
 };
+
+using vecc = Vector2;
