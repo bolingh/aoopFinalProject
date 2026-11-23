@@ -17,6 +17,7 @@ struct Vector2 {
         return Vector2(x - other.x, y - other.y);
     }
 };
+using vecc = Vector2;
 
 Vector2 operator*(double multi, Vector2 v) {
     return Vector2(multi * v.x, multi * v.y);

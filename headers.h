@@ -8,7 +8,6 @@
 #include <unordered_map>
 using namespace std;
 #include "DataStrucs.h"
-using vecc = Vector2;
 #include "GenerateRand.h"
 #include "IBrain.h"
 #include "Creatures.h"
