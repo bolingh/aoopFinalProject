@@ -11,3 +11,4 @@ using namespace std;
 #include "GenerateRand.h"
 #include "IBrain.h"
 #include "Creatures.h"
+#include "InitParameters.h"
