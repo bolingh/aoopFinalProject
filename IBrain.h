@@ -1,5 +1,6 @@
 #pragma once
 #include "DataStrucs.h"
+#include "GenerateRand.h"
 #include <cstdlib>
 
 class IBrain {
@@ -21,7 +22,7 @@ public:
             return act;
         }
         // move freely
-        act.forward = {0.2, 0.0};
+        act.forward = {get_rand(-1.0, 1.0), get_rand(-1.0, 1.0)};
         return act;
     }
 };
