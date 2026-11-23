@@ -32,11 +32,11 @@ public:
             auto b = make_unique<RuleBasedBrain>();
             orgs.push_back(organism_constructors[t](p, v, e, g, move(b)));
         }
-        plants.resize(init_plant_num);
+        plants.resize(init_num[plant_type]);
         for(auto &plant : plants) {
             plant.pos = rand_pos();
-            plant.size = init_plant_sz;
-            plant.ener = init_plant_ener;
+            plant.size = init_sz[plant_type];
+            plant.ener = init_ener[plant_type];
             plant.is_eaten = false;
         }
     }
