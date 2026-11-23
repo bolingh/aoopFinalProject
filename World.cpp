@@ -39,6 +39,13 @@ public:
             plant.ener = 25;
             plant.is_eaten = false;
         }
+        plants.resize(org_num * 10);
+        for(auto &plant : plants) {
+            plant.pos = {get_rand((double)width), get_rand((double)height)};
+            plant.size = 10;
+            plant.ener = 40;
+            plant.is_eaten = false;
+        }
     }
     void step() {
         // for all org:orgs, org->tick() (moves)
