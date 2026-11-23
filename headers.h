@@ -9,6 +9,6 @@
 using namespace std;
 #include "DataStrucs.h"
 #include "GenerateRand.h"
+#include "InitParameters.h"
 #include "IBrain.h"
 #include "Creatures.h"
-#include "InitParameters.h"

@@ -37,14 +37,39 @@ public:
     unique_ptr<IBrain> brain;
     
     void decay_energy() {
-        double cost = init_decay[type] * (0.5 + 0.5 * velo.len() / init_speed[type];
-        ener = max(0.0, ener - cost));
+        double cost = init_decay[type] * (0.5 + 0.5 * velo.len() / init_speed[type]);
+        ener = max(0.0, ener - cost);
     }
     virtual Perception sense(const WorldContext &ctx) = 0;
-    virtual void act(Action action) = 0;
+    void act(Action action) {
+        vecc des_dir = action.forward.normalized();
+        if(des_dir.x != 0 || des_dir.y != 0) {
+            vecc des_velo = des_dir * gen.max_speed;
+            velo = velo * 0.8 + des_velo * 0.2;
+            if(velo.len() > gen.max_speed) velo = velo.normalized() * gen.max_speed;
+        }
+        pos = pos + velo;
+        double r = gen.size;
+        if(pos.x - r < 0) { // left
+            pos.x = r;
+            velo.x = -velo.x;
+        }
+        else if(pos.x + r > init_world_width) { // right
+            pos.x = init_world_width - r;
+            velo.x = -velo.x;
+        }
+        if(pos.y - r < 0) { // ceil
+            pos.y = r;
+            velo.y = -velo.y;
+        }
+        else if(pos.y + r > init_world_height) { // floor
+            pos.y = init_world_height - r;
+            velo.y = -velo.y;
+        }
+    }
     virtual bool can_reproduce() const {return ener > 150;};
     virtual unique_ptr<Organism> reproduce() = 0;
-    void tick(const WorldContext &ctx) {
+    void tick(const WorldContext& ctx) {
         // decay_energy() -> sense() -> decide() -> act() -> reproduce()
         decay_energy();
         Perception p = sense(ctx);
@@ -57,12 +82,12 @@ class Sheep : public Organism {
 public:
     Sheep(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 1, g, move(b)) {}
-    Perception sense(const WorldContext& ctx) {
+    Perception sense(const WorldContext &ctx) {
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = p.predator_dir = {0, 0};
         double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
-        for(auto& plant : ctx.plants) {
+        for(auto &plant : ctx.plants) {
             if(plant.is_eaten) continue;
             vecc diff = plant.pos - this->pos;
             double dist_sq = diff.len();
@@ -72,10 +97,10 @@ public:
                 p.food_dir = diff.normalized();
             }
         }
-        for(auto& other : ctx.orgs) {
-            if(other->type > type) {
+        for(auto &other : ctx.orgs) {
+            if(other->type > this->type) {
                 vecc diff = other->pos - this->pos;
-                double dist_sq = diff.x * diff.x + diff.y * diff.y;
+                double dist_sq = diff.len();
                 if (dist_sq < min_predator_dist_sq) {
                     min_predator_dist_sq = dist_sq;
                     p.has_predator = true;
@@ -85,7 +110,6 @@ public:
         }
         return p;
     }
-    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
@@ -94,7 +118,6 @@ public:
     Wolf(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 2, g, move(b)) {}
     Perception sense(const WorldContext&) override { return {}; }
-    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
@@ -103,6 +126,5 @@ public:
     Bear(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 3, g, move(b)) {}
     Perception sense(const WorldContext&) override { return {}; }
-    void act(Action action) override {}
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
