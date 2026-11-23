@@ -1,20 +1,20 @@
 import pygame
-import initialExample as ecosim
-#import World as ecosim
+#import initialExample as ecosim
+import World as ecosim
 
 pygame.init()
-WIDTH, HEIGHT = ecosim.get_width(), ecosim.get_height()
+sim = ecosim.World()
+WIDTH, HEIGHT = sim.get_width(), sim.get_height()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Ecosystem")
 clock = pygame.time.Clock()
-
-sim = ecosim.SimulationWorld()
 
 # 顏色定義：0: 植物(綠), 1: 草食(藍), 2: 肉食(紅)
 COLORS = {
     0: (46, 204, 113),
     1: (52, 152, 219),
-    2: (231, 76, 60)
+    2: (231, 76, 60),
+    3: (155, 89, 182)
 }
 
 running = True
