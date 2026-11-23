@@ -7,7 +7,7 @@ struct Vector2 {
     }
     Vector2 normalized() const {
         double l = len();
-        if (abs(l) <= 1e-8) return {0, 0};
+        if(abs(l) <= 1e-8) return {0, 0};
         return {x / l, y / l};
     }
     Vector2 operator+(const Vector2 other) const {
