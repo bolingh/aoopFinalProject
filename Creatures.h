@@ -45,7 +45,7 @@ public:
         vecc des_dir = action.forward.normalized();
         if(des_dir.x != 0 || des_dir.y != 0) {
             vecc des_velo = des_dir * gen.max_speed;
-            velo = velo * 0.8 + des_velo * 0.2;
+            velo = velo * 0.8 + des_velo * 0.2; // to move smoother
             if(velo.len() > gen.max_speed) velo = velo.normalized() * gen.max_speed;
         }
         pos = pos + velo;
