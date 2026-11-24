@@ -117,7 +117,33 @@ class Wolf : public Organism {
 public:
     Wolf(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 2, g, move(b)) {}
-    Perception sense(const WorldContext&) override { return {}; }
+    Perception sense(const WorldContext&) override {
+        Perception p;
+        p.has_food = p.has_predator = false;
+        p.food_dir = p.predator_dir = {0, 0};
+        double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
+        for(auto &other : ctx.orgs) {
+            if(other->type < this->type) {
+                vecc diff = other->pos - this->pos;
+                double dist_sq = diff.len();
+                if (dist_sq < min_food_dist_sq) {
+                    min_food_dist_sq = dist_sq;
+                    p.has_food = true;
+                    p.food_dir = diff.normalized();
+                }
+            }
+            else if(other->type > this->type) {
+                vecc diff = other->pos - this->pos;
+                double dist_sq = diff.len();
+                if (dist_sq < min_predator_dist_sq) {
+                    min_predator_dist_sq = dist_sq;
+                    p.has_predator = true;
+                    p.predator_dir = diff.normalized();
+                }
+            }
+        }
+        return p;
+    }
     unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
