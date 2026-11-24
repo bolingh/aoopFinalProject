@@ -123,7 +123,7 @@ public:
         p.food_dir = p.predator_dir = {0, 0};
         double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
         for(auto &other : ctx.orgs) {
-            if(other->type < this->type) {
+            if(other->type < this->type) { // other->type = 1
                 vecc diff = other->pos - this->pos;
                 double dist_sq = diff.len();
                 if (dist_sq < min_food_dist_sq) {
@@ -132,7 +132,7 @@ public:
                     p.food_dir = diff.normalized();
                 }
             }
-            else if(other->type > this->type) {
+            else if(other->type > this->type) { // other->type = 3
                 vecc diff = other->pos - this->pos;
                 double dist_sq = diff.len();
                 if (dist_sq < min_predator_dist_sq) {
