@@ -9,11 +9,14 @@ public:
 
 struct Genome {
     double max_speed, fov, size, mutation_rate;
-    Genome mutate() {
-        return {max_speed + get_rand(-mutation_rate, mutation_rate), 
-                fov + get_rand(-mutation_rate, mutation_rate),
-                size + get_rand(-mutation_rate, mutation_rate),
-                mutation_rate + get_rand(-mutation_rate, mutation_rate)};
+    Genome mutate() const {
+        Genome child = *this;
+        if(get_rand(0.0, 1.0) < mutation_rate) {
+            child.max_speed += get_rand(-0.1, 0.1);
+            child.fov += get_rand(-5.0, 5.0);
+            child.size += get_rand(-0.5, 0.5);
+        }
+        return child;
     }
 };
 
