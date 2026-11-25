@@ -9,15 +9,23 @@ public:
 
 struct Genome {
     double max_speed, fov, size, mutation_rate;
-    Genome mutate() {
-        return {max_speed + get_rand(-mutation_rate, mutation_rate), 
-                fov + get_rand(-mutation_rate, mutation_rate),
-                size + get_rand(-mutation_rate, mutation_rate),
-                mutation_rate + get_rand(-mutation_rate, mutation_rate)};
+    Genome mutate() const {
+        Genome child = *this;
+        if(get_rand(0.0, 1.0) < mutation_rate) {
+            child.max_speed += get_rand(-0.1, 0.1);
+            child.fov += get_rand(-5.0, 5.0);
+            child.size += get_rand(-0.5, 0.5);
+        }
+        return child;
     }
 };
 
 class Organism;
+class Sheep;
+class Wolf;
+class Bear;
+
+unique_ptr<Organism> create_organism(int type, vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b);
 
 struct WorldContext {
     const vector<unique_ptr<Organism>> &orgs;
@@ -67,8 +75,22 @@ public:
             velo.y = -velo.y;
         }
     }
-    virtual bool can_reproduce() const {return ener > 150;};
-    virtual unique_ptr<Organism> reproduce() = 0;
+    unique_ptr<Organism> reproduce() {
+        if(ener < init_repro[type]) return nullptr;
+        double ch_ener = ener * 0.3;
+        ener -= ch_ener;
+        vecc ch_pos = pos + vecc{get_rand(-5.0, 5.0), get_rand(-5.0, 5.0)};
+        Genome ch_gen = gen.mutate();
+        auto ch_brain = make_unique<RuleBasedBrain>();
+        return create_organism(
+            type,
+            ch_pos,
+            velo,
+            ch_ener,
+            ch_gen,
+            move(ch_brain)
+        );
+    }
     void tick(const WorldContext& ctx) {
         // decay_energy() -> sense() -> decide() -> act() -> reproduce()
         decay_energy();
@@ -110,14 +132,13 @@ public:
         }
         return p;
     }
-    unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
 class Wolf : public Organism {
 public:
     Wolf(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 2, g, move(b)) {}
-    Perception sense(const WorldContext&) override {
+    Perception sense(const WorldContext& ctx) override {
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = p.predator_dir = {0, 0};
@@ -144,14 +165,13 @@ public:
         }
         return p;
     }
-    unique_ptr<Organism> reproduce() override { return nullptr; }
 };
 
 class Bear : public Organism {
 public:
     Bear(vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) 
         : Organism(p, v, e, 3, g, move(b)) {}
-    Perception sense(const WorldContext&) override {
+    Perception sense(const WorldContext& ctx) override {
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = {0, 0};
@@ -169,5 +189,21 @@ public:
         }
         return p;
     }
-    unique_ptr<Organism> reproduce() override { return nullptr; }
 };
+
+unique_ptr<Organism> create_organism(
+    int type, vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) {
+        using OrganismConstructor = unique_ptr<Organism>(*)(vecc, vecc, double, Genome, unique_ptr<IBrain>);
+        static const unordered_map<int, OrganismConstructor> constructors = {
+            {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+                return make_unique<Sheep>(p, v, e, g, move(b));
+            }},
+            {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+                return make_unique<Wolf>(p, v, e, g, move(b));
+            }},
+            {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
+                return make_unique<Bear>(p, v, e, g, move(b));
+            }}
+        };
+        return constructors.at(type)(p, v, e, g, move(b));
+}

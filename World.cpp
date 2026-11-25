@@ -1,18 +1,5 @@
 #include "headers.h"
 
-using OrganismConstruc = unique_ptr<Organism>(*)(vecc, vecc, double, Genome, unique_ptr<IBrain>);
-static unordered_map<int, OrganismConstruc> organism_constructors = {
-    {1, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Sheep>(p, v, e, g, move(b));
-    }},
-    {2, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Wolf>(p, v, e, g, move(b));
-    }},
-    {3, [](vecc p, vecc v, double e, Genome g, unique_ptr<IBrain> b) -> unique_ptr<Organism> {
-        return make_unique<Bear>(p, v, e, g, move(b));
-    }}
-};
-
 class World {
 private:
     int width, height;
@@ -38,7 +25,7 @@ public:
                 vecc p(rand_pos());
                 Genome g = {init_speed[t], init_fov[t], init_sz[t], 0.1};
                 auto b = make_unique<RuleBasedBrain>();
-                orgs.push_back(organism_constructors[t](p, rand_dir() * init_speed[t], init_ener[t], g, move(b)));
+                orgs.push_back(create_organism(t, p, rand_dir() * init_speed[t], init_ener[t], g, move(b)));
             }
         }
     }
