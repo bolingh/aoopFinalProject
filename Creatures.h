@@ -10,13 +10,16 @@ public:
 struct Genome {
     double max_speed, fov, size, mutation_rate;
     Genome mutate() const {
-        Genome child = *this;
+        Genome ch = *this;
         if(get_rand(0.0, 1.0) < mutation_rate) {
-            child.max_speed += get_rand(-0.1, 0.1);
-            child.fov += get_rand(-5.0, 5.0);
-            child.size += get_rand(-0.5, 0.5);
+            ch.max_speed += get_rand(-0.1, 0.1);
+            ch.max_speed = max(0.1, ch.max_speed);
+            ch.fov += get_rand(-5.0, 5.0);
+            ch.fov = max(0.1, ch.fov);
+            ch.size += get_rand(-0.5, 0.5);
+            ch.size = max(ch.size, 0.1);
         }
-        return child;
+        return ch;
     }
 };
 
