@@ -111,13 +111,13 @@ public:
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = p.predator_dir = {0, 0};
-        double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
+        double min_food_dist = gen.fov, min_predator_dist = gen.fov;
         for(auto &plant : ctx.plants) {
             if(plant.is_eaten) continue;
             vecc diff = plant.pos - this->pos;
-            double dist_sq = diff.len();
-            if(dist_sq < min_food_dist_sq) {
-                min_food_dist_sq = dist_sq;
+            double dist = diff.len();
+            if(dist < min_food_dist) {
+                min_food_dist = dist;
                 p.has_food = true;
                 p.food_dir = diff.normalized();
             }
@@ -125,9 +125,9 @@ public:
         for(auto &other : ctx.orgs) {
             if(other->type > this->type) {
                 vecc diff = other->pos - this->pos;
-                double dist_sq = diff.len();
-                if (dist_sq < min_predator_dist_sq) {
-                    min_predator_dist_sq = dist_sq;
+                double dist = diff.len();
+                if (dist < min_predator_dist) {
+                    min_predator_dist = dist;
                     p.has_predator = true;
                     p.predator_dir = diff.normalized();
                 }
@@ -145,22 +145,22 @@ public:
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = p.predator_dir = {0, 0};
-        double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq, min_predator_dist_sq = fov_sq;
+        double min_food_dist = gen.fov, min_predator_dist = gen.fov;
         for(auto &other : ctx.orgs) {
             if(other->type < this->type) { // other->type = 1
                 vecc diff = other->pos - this->pos;
-                double dist_sq = diff.len();
-                if (dist_sq < min_food_dist_sq) {
-                    min_food_dist_sq = dist_sq;
+                double dist = diff.len();
+                if (dist < min_food_dist) {
+                    min_food_dist = dist;
                     p.has_food = true;
                     p.food_dir = diff.normalized();
                 }
             }
             else if(other->type > this->type) { // other->type = 3
                 vecc diff = other->pos - this->pos;
-                double dist_sq = diff.len();
-                if (dist_sq < min_predator_dist_sq) {
-                    min_predator_dist_sq = dist_sq;
+                double dist = diff.len();
+                if (dist < min_predator_dist) {
+                    min_predator_dist = dist;
                     p.has_predator = true;
                     p.predator_dir = diff.normalized();
                 }
@@ -178,13 +178,13 @@ public:
         Perception p;
         p.has_food = p.has_predator = false;
         p.food_dir = {0, 0};
-        double fov_sq = gen.fov * gen.fov, min_food_dist_sq = fov_sq;
+        double min_food_dist = gen.fov;
         for(auto &other : ctx.orgs) {
             if(other->type < this->type) { // other->type = 1, 2
                 vecc diff = other->pos - this->pos;
-                double dist_sq = diff.len();
-                if (dist_sq < min_food_dist_sq) {
-                    min_food_dist_sq = dist_sq;
+                double dist = diff.len();
+                if (dist < min_food_dist) {
+                    min_food_dist = dist;
                     p.has_food = true;
                     p.food_dir = diff.normalized();
                 }
